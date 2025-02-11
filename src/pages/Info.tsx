@@ -2,12 +2,25 @@ import { useEffect } from 'react';
 
 import liff from "@line/liff";
 
-
-
 function Info() {
     // const []
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
+
+
+    function sendMsg() {
+        liff.sendMessages([
+            {
+                type: 'text',
+                text: 'Hello, World!'
+            }
+        ]).then(function (res) {
+            console.log(res)
+        })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
 
     useEffect(() => {
         const initializeLiff = async () => {
@@ -32,9 +45,8 @@ function Info() {
 
     return <>
         <div>
-            <h2>User Profile</h2>
-            {/* <p>{userData.profile?.displayName} 歡迎你回來</p>
-            <img className='user-photo' src={userData.profile?.pictureUrl} alt="用戶頭像" /> */}
+            <h2>Info Page</h2>
+            <button className='btn btn-primary' type="button" onClick={() => sendMsg()}>發送訊息</button>
         </div>
     </>;
 }
