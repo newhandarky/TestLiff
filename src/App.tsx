@@ -1,5 +1,5 @@
 // import React from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import Home from "../src/pages/Home";
 import Info from "../src/pages/Info";
@@ -10,13 +10,11 @@ function App() {
 
   return (
     <>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/Info" element={<Info />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </HashRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/Info" element={<Info />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
   )
 }
