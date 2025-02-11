@@ -11,7 +11,7 @@ interface UserDataState {
 
 function Home() {
     const [userData, setUserData] = useState<UserDataState>({ profile: null });
-    // const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const fetchProfile = async () => {
         try {
@@ -30,12 +30,11 @@ function Home() {
             try {
                 await liff.init({
                     liffId: liffId,
-                    withLoginOnExternalBrowser: true,
                 });
                 console.log('LIFF initialized');
 
                 if (!liff.isLoggedIn()) {
-                    liff.login();
+                    setIsLoggedIn(false);
                 } else {
                     await fetchProfile(); // 呼叫 fetchProfile 取得使用者資料
                 }
@@ -63,7 +62,14 @@ function Home() {
                     <p>This is the home page.</p>
                 </div>
                 <div>
-                    { }
+                    {isLoggedIn ?
+                        <div>
+                            <h2>User Profile</h2>
+                            <p>Name: {userData.profile?.displayName}</p>
+                            <img src={userData.profile?.pictureUrl} alt="用戶頭像" />
+                        </div> :
+                        <button onClick={() => liff.login()}>Login</button>
+                    }
                 </div>
             </div >
         </>
