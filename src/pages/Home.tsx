@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import liff from '@line/liff';
 
-import Profile from '../trpes/Profile';
+import Profile from '../types/Profile';
 
 import "./all.scss"
 
-const liffId = '2006884711-Q5r6z736';
 
 interface UserDataState {
     profile: Profile | null;
@@ -15,6 +14,7 @@ function Home() {
     const [userData, setUserData] = useState<UserDataState>({ profile: null });
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const fetchProfile = async () => {
         try {
             const profile = await liff.getProfile();
@@ -29,6 +29,7 @@ function Home() {
 
     useEffect(() => {
         const initializeLiff = async () => {
+
             try {
                 await liff.init({
                     liffId: liffId,
@@ -79,4 +80,3 @@ function Home() {
     );
 }
 export default Home;
-
