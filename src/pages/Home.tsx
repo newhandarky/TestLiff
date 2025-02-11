@@ -36,6 +36,7 @@ function Home() {
                 if (!liff.isLoggedIn()) {
                     setIsLoggedIn(false);
                 } else {
+                    setIsLoggedIn(true);
                     await fetchProfile(); // 呼叫 fetchProfile 取得使用者資料
                 }
             } catch (error) {
