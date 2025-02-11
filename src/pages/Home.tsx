@@ -1,41 +1,60 @@
-// import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import liff from '@line/liff';
+
+import Profile from '../trpes/Profile';
+
 const liffId = '2006884711-Q5r6z736';
 
+interface UserDataState {
+    profile: Profile | null;
+}
+
 function Home() {
-    // const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState<UserDataState>({ profile: null });
     // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    liff.init({
-        liffId: liffId,
+    const fetchProfile = async () => {
+        try {
+            const profile = await liff.getProfile();
+            setUserData(prevState => ({
+                ...prevState,
+                profile
+            }));
+        } catch (error) {
+            console.error('Error fetching profile:', error);
+        }
+    };
+
+    useEffect(() => {
+        const initializeLiff = async () => {
+            try {
+                await liff.init({
+                    liffId: liffId,
+                    withLoginOnExternalBrowser: true,
+                });
+                console.log('LIFF initialized');
+
+                if (!liff.isLoggedIn()) {
+                    liff.login();
+                } else {
+                    await fetchProfile(); // 呼叫 fetchProfile 取得使用者資料
+                }
+            } catch (error) {
+                console.error('Error initializing LIFF:', error);
+            }
+        };
+
+        initializeLiff(); // 初始化 LIFF
+    }, []);
 
 
-        // withLoginOnExternalBrowser: true
-    }).then(function () {
-        console.log('LIFF init');
-
-        if (liff.isLoggedIn()) {
-            console.log('已登入');
-        } else {
-            console.log('未登入');
+    useEffect(() => {
+        if (userData) {
+            console.log('User Data:', userData)
         }
 
-        // 這邊開始寫使用其他功能
+    }, [userData])
 
-
-    }).catch(function (error) {
-        console.log(error);
-    });
-
-    // if (!liff.isLoggedIn()) {
-    //     liff.login();
-    // } else {
-    //     liff.getProfile().then(function (profile) {
-    //         setUserData(profile);
-    //     }).catch(function (error) {
-    //         console.log(error);
-    //     });
-    // }
     return (
         <>
             <div className=''>
@@ -43,8 +62,12 @@ function Home() {
                     <h1>Welcome to My App</h1>
                     <p>This is the home page.</p>
                 </div>
+                <div>
+                    { }
+                </div>
             </div >
         </>
     );
 }
 export default Home;
+

@@ -11,11 +11,15 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           {/* <Route path="/about" element={<About />} /> */}
-          {/* <Route path="*" element={<NotFound />} /> */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </>
   )
+}
+
+function NotFound() {
+  return <h1>404 - 找不到頁面</h1>;
 }
 
 export default App
