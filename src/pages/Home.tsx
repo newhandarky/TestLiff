@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import liff from '@line/liff';
 
 import Profile from '../types/Profile';
@@ -13,6 +14,8 @@ interface UserDataState {
 function Home() {
     const [userData, setUserData] = useState<UserDataState>({ profile: null });
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const navigate = useNavigate();
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const fetchProfile = async () => {
@@ -53,6 +56,8 @@ function Home() {
 
     useEffect(() => {
         if (userData) {
+            console.log(liff, "liff");
+
             console.log('User Data:', userData)
         }
 
@@ -71,7 +76,7 @@ function Home() {
                             <h2>User Profile</h2>
                             <p>{userData.profile?.displayName} 歡迎你回來</p>
                             <img className='user-photo' src={userData.profile?.pictureUrl} alt="用戶頭像" />
-                            <button className='btn btn-success' onClick={() => liff.logout()}>點我登出</button>
+                            <button className='btn btn-success' onClick={() => navigate('/Info')}>查看個人資料</button>
                         </div> :
                         <button className='btn btn-success' onClick={() => liff.login()}>點我登入</button>
                     }
