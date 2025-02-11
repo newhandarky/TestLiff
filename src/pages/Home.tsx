@@ -48,7 +48,7 @@ function Home() {
         };
 
         initializeLiff(); // 初始化 LIFF
-    }, []);
+    }, [liffId]);
 
 
     useEffect(() => {
@@ -71,6 +71,7 @@ function Home() {
                             <h2>User Profile</h2>
                             <p>{userData.profile?.displayName} 歡迎你回來</p>
                             <img className='user-photo' src={userData.profile?.pictureUrl} alt="用戶頭像" />
+                            <button className='btn btn-success' onClick={() => liff.logout()}>點我登出</button>
                         </div> :
                         <button className='btn btn-success' onClick={() => liff.login()}>點我登入</button>
                     }

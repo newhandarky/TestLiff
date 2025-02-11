@@ -17,6 +17,7 @@ function Info() {
                 });
 
                 if (!liff.isLoggedIn()) {
+                    console.log("尚未登入");
                     liff.login({ redirectUri: homePath });
                 } else {
                     console.log(liff.isLoggedIn(), "已經登入");
@@ -27,7 +28,7 @@ function Info() {
             }
         };
         initializeLiff();
-    }, []);
+    }, [liffId, homePath]);
 
     return <>
         <div>
