@@ -1,3 +1,5 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Home from "../src/pages/Home";
 
@@ -5,7 +7,13 @@ function App() {
 
   return (
     <>
-      <Home />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/about" element={<About />} /> */}
+          {/* <Route path="*" element={<NotFound />} /> */}
+        </Routes>
+      </Router>
     </>
   )
 }
