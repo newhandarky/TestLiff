@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Home from "../src/pages/Home";
 
+import "./pages/all.scss"
+
 function App() {
 
   return (

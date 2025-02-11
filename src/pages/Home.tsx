@@ -3,6 +3,8 @@ import liff from '@line/liff';
 
 import Profile from '../trpes/Profile';
 
+import "./all.scss"
+
 const liffId = '2006884711-Q5r6z736';
 
 interface UserDataState {
@@ -66,10 +68,10 @@ function Home() {
                     {isLoggedIn ?
                         <div>
                             <h2>User Profile</h2>
-                            <p>Name: {userData.profile?.displayName}</p>
-                            <img src={userData.profile?.pictureUrl} alt="用戶頭像" />
+                            <p>{userData.profile?.displayName} 歡迎你回來</p>
+                            <img className='user-photo' src={userData.profile?.pictureUrl} alt="用戶頭像" />
                         </div> :
-                        <button onClick={() => liff.login()}>Login</button>
+                        <button className='btn btn-success' onClick={() => liff.login()}>點我登入</button>
                     }
                 </div>
             </div >
