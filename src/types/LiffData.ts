@@ -1,10 +1,9 @@
 interface LiffData {
-    os?: string;
+    // os?: string;
     aLang?: string;
     lang?: string;
     ver?: string;
-    lineVer?: string;
-    // context?: any;
+    // lineVer?: string;
     isInClient?: boolean;
     isLoggedIn?: boolean;
 }
