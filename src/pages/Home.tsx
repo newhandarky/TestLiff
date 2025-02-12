@@ -65,7 +65,7 @@ function Home() {
 
     return (
         <>
-            <div className=''>
+            <div className='p-4'>
                 <div>
                     <h1>Welcome to My App</h1>
                     <p>This is the home page.</p>
