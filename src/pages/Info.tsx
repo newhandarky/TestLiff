@@ -45,8 +45,8 @@ function Info() {
     return <>
         <div className='p-4'>
             <h2>Info Page</h2>
-            <button className='btn btn-primary' type="button" onClick={() => console.log(saveUser())
-            }>發送訊息</button>
+            <button className='btn btn-primary' type="button" onClick={() => saveUser()
+            }>取得用戶訊息</button>
             {liff.isLoggedIn() && (
                 <div>
                     <p>App Language: {liff.getAppLanguage()}</p>

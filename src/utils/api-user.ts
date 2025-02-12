@@ -12,6 +12,7 @@ export async function saveUser() {
             headers: { 'Content-Type': 'application/json' },
         });
 
+        console.log(profile, '用戶資料')
         console.log('用戶資料儲存成功:', response.data);
     } catch (error) {
         console.error('儲存用戶資料失敗:', error);
