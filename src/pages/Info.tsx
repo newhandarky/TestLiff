@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { saveUser } from "../utils/api-user"
 
 import liff from "@line/liff";
 
@@ -6,19 +7,19 @@ function Info() {
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
 
-    function sendMsg() {
-        liff.sendMessages([
-            {
-                type: 'text',
-                text: 'Hello, World!'
-            }
-        ]).then(function (res) {
-            console.log(res)
-        })
-            .catch(function (error) {
-                console.log(error);
-            })
-    }
+    // function sendMsg() {
+    //     liff.sendMessages([
+    //         {
+    //             type: 'text',
+    //             text: 'Hello, World!'
+    //         }
+    //     ]).then(function (res) {
+    //         console.log(res)
+    //     })
+    //         .catch(function (error) {
+    //             console.log(error);
+    //         })
+    // }
 
     useEffect(() => {
         const initializeLiff = async () => {
@@ -44,7 +45,8 @@ function Info() {
     return <>
         <div className='p-4'>
             <h2>Info Page</h2>
-            <button className='btn btn-primary' type="button" onClick={() => sendMsg()}>發送訊息</button>
+            <button className='btn btn-primary' type="button" onClick={() => console.log(saveUser())
+            }>發送訊息</button>
             {liff.isLoggedIn() && (
                 <div>
                     <p>App Language: {liff.getAppLanguage()}</p>
