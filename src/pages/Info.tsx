@@ -7,20 +7,6 @@ function Info() {
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
 
-    // function sendMsg() {
-    //     liff.sendMessages([
-    //         {
-    //             type: 'text',
-    //             text: 'Hello, World!'
-    //         }
-    //     ]).then(function (res) {
-    //         console.log(res)
-    //     })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         })
-    // }
-
     useEffect(() => {
         const initializeLiff = async () => {
             try {

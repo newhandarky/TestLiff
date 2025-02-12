@@ -1,3 +1,5 @@
+// 寫錯
+
 import axios from 'axios';
 
 const CHANNEL_ACCESS_TOKEN = 'YOUR_CHANNEL_ACCESS_TOKEN'; // 替換為你的 Channel Access Token
