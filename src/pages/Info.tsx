@@ -57,7 +57,7 @@ function Info() {
                         alert(response.data);
                     })
                     .catch(error => {
-                        console.error('傳送失敗:', error);
+                        console.error('在前端傳送失敗:', error);
                         // 處理錯誤情況，例如提醒用戶
                         alert('傳送訊息失敗');
                     });
@@ -77,6 +77,7 @@ function Info() {
             <h2>Info Page</h2>
             <button className='btn btn-primary' type="button" onClick={() => handleModal()
             }>顯示用戶訊息</button>
+            <br />
             <button className='btn btn-primary' type="button" onClick={() => setSendNow(true)
             }>發送登入訊息給用戶</button>
             {isOpen && (
