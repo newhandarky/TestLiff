@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { saveUser } from "../utils/api-user"
 import { sendMessage } from "../utils/lineMessaging"
 
 import liff from "@line/liff";
