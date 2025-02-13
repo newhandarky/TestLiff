@@ -59,7 +59,7 @@ function Info() {
                 sendNow ?
                     <button className='btn btn-primary' type="button" onClick={() => handleModal()
                     }>顯示用戶訊息</button> :
-                    <button className='btn btn-primary' type="button" onClick={() => setSendNow()
+                    <button className='btn btn-primary' type="button" onClick={() => setSendNow(true)
                     }>發送登入訊息給用戶</button>
             }
             {isOpen && (
