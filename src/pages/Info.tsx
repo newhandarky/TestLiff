@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { sendMessage } from "../utils/lineMessaging"
+import axios from 'axios';
 
 import liff from "@line/liff";
 
@@ -7,9 +7,11 @@ import useToggleHandle from '../hooks/useToggleHandle';
 function Info() {
     const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
     const [sendNow, setSendNow] = useState(false);
+    // const [newMessage, setNewMessage] = useState<string>('');
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
+    const apiUrl = import.meta.env.VITE_API_URL as string;
 
     // const
     useEffect(() => {
@@ -38,9 +40,28 @@ function Info() {
             try {
                 // 等待 getProfile 完成，並取得用戶資料
                 const profile = await liff.getProfile();
+                console.log(profile.displayName, "用戶資訊");
 
-                // 傳送訊息告知登入成功
-                await sendMessage(profile.userId, "登入成功！");
+                // 發送請求
+                axios.post(`${apiUrl}/webhook/send-message`, {
+                    userId: profile.userId,
+                    message: "您已成功登入"
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        console.log('傳送成功:', response.data);
+                        // 你可以根據響應數據做進一步處理，例如彈出提示
+                        alert(response.data);
+                    })
+                    .catch(error => {
+                        console.error('傳送失敗:', error);
+                        // 處理錯誤情況，例如提醒用戶
+                        alert('傳送訊息失敗');
+                    });
+
             } catch (error) {
                 console.error('傳送訊息失敗:', error);
             }
@@ -54,13 +75,10 @@ function Info() {
     return <>
         <div className='p-4'>
             <h2>Info Page</h2>
-            {
-                sendNow ?
-                    <button className='btn btn-primary' type="button" onClick={() => handleModal()
-                    }>顯示用戶訊息</button> :
-                    <button className='btn btn-primary' type="button" onClick={() => setSendNow(true)
-                    }>發送登入訊息給用戶</button>
-            }
+            <button className='btn btn-primary' type="button" onClick={() => handleModal()
+            }>顯示用戶訊息</button>
+            <button className='btn btn-primary' type="button" onClick={() => setSendNow(true)
+            }>發送登入訊息給用戶</button>
             {isOpen && (
                 <div>
                     <p>App Language: {liff.getAppLanguage()}</p>
