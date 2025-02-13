@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const CHANNEL_ACCESS_TOKEN = 'YOUR_CHANNEL_ACCESS_TOKEN'; // 替換為你的 Channel Access Token
 
-async function sendMessage(userId: string, message: string) {
+export async function sendMessage(userId: string, message: string) {
     try {
         const response = await axios.post(
             'https://api.line.me/v2/bot/message/push',
@@ -23,5 +23,3 @@ async function sendMessage(userId: string, message: string) {
         throw error;
     }
 }
-
-module.exports = { sendMessage };

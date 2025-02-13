@@ -1,14 +1,16 @@
-import { useEffect } from 'react';
-// import { saveUser } from "../utils/api-user"
+import { useEffect, useState } from 'react';
+import { saveUser } from "../utils/api-user"
 import { sendMessage } from "../utils/lineMessaging"
 
 import liff from "@line/liff";
 
 import useToggleHandle from '../hooks/useToggleHandle';
 function Info() {
+    const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
+    const [sendNow, setSendNow] = useState(false);
+
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
-    const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
 
     // const
     useEffect(() => {
@@ -48,13 +50,18 @@ function Info() {
         if (liff.isLoggedIn()) {
             handleLoggedIn(); // 調用 async 函式，記得加上 await
         }
-    }, [liff]);
+    }, [sendNow]);
 
     return <>
         <div className='p-4'>
             <h2>Info Page</h2>
-            <button className='btn btn-primary' type="button" onClick={() => handleModal()
-            }>取得用戶訊息</button>
+            {
+                sendNow ?
+                    <button className='btn btn-primary' type="button" onClick={() => handleModal()
+                    }>顯示用戶訊息</button> :
+                    <button className='btn btn-primary' type="button" onClick={() => setSendNow()
+                    }>發送登入訊息給用戶</button>
+            }
             {isOpen && (
                 <div>
                     <p>App Language: {liff.getAppLanguage()}</p>
