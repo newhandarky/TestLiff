@@ -3,14 +3,19 @@ import axios from 'axios';
 
 import liff from "@line/liff";
 
+import Profile from "../types/Profile";
 import useToggleHandle from '../hooks/useToggleHandle';
+
+interface ProfileState {
+    profile: Profile;
+}
+
 function Info() {
     const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
-    const [sendNow, setSendNow] = useState(false);
-    // const [newMessage, setNewMessage] = useState<string>('');
+    const [profile, setProfile] = useState<ProfileState | null>(null);
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
-    const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
+    // const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
     const apiUrl = import.meta.env.VITE_API_URL as string;
 
     // const
@@ -23,7 +28,7 @@ function Info() {
 
                 if (!liff.isLoggedIn()) {
                     console.log("尚未登入");
-                    liff.login({ redirectUri: homePath });
+                    liff.login();
                 } else {
                     console.log(liff.isLoggedIn(), "已經登入");
                 }
@@ -33,44 +38,49 @@ function Info() {
             }
         };
         initializeLiff();
-    }, [liffId, homePath]);
+    }, [liffId]);
+
+    const handleLoggedIn = async () => {
+        try {
+            // 發送請求
+            axios.post(`${apiUrl}/webhook/send-message`, {
+                userId: profile?.profile.userId, // 使用可選鏈接操作符檢查 profile 是否為 null
+                message: "您已成功登入"
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    console.log('傳送成功:', response.data);
+                    // 你可以根據響應數據做進一步處理，例如彈出提示
+                    alert(response.data);
+                })
+                .catch(error => {
+                    console.error('在前端傳送失敗:', error);
+                    // 處理錯誤情況，例如提醒用戶
+                    alert('傳送訊息失敗');
+                });
+
+        } catch (error) {
+            console.error('傳送訊息失敗:', error);
+        }
+    };
 
     useEffect(() => {
-        const handleLoggedIn = async () => {
+        // 等待 getProfile 完成，並取得用戶資料
+        const fetchProfile = async () => {
             try {
-                // 等待 getProfile 完成，並取得用戶資料
-                const profile = await liff.getProfile();
-                console.log(profile.displayName, "用戶資訊");
-
-                // 發送請求
-                axios.post(`${apiUrl}/webhook/send-message`, {
-                    userId: profile.userId,
-                    message: "您已成功登入"
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                    .then(response => {
-                        console.log('傳送成功:', response.data);
-                        // 你可以根據響應數據做進一步處理，例如彈出提示
-                        alert(response.data);
-                    })
-                    .catch(error => {
-                        console.error('在前端傳送失敗:', error);
-                        // 處理錯誤情況，例如提醒用戶
-                        alert('傳送訊息失敗');
-                    });
-
+                const data = await liff.getProfile(); // 獲取用戶資料
+                console.log(data.displayName, "用戶資訊");
+                setProfile({ profile: data }); // 將資料存入狀態
             } catch (error) {
-                console.error('傳送訊息失敗:', error);
+                console.error("取得用戶資訊時發生錯誤:", error);
             }
         };
 
-        if (liff.isLoggedIn()) {
-            handleLoggedIn(); // 調用 async 函式，記得加上 await
-        }
-    }, [sendNow]);
+        fetchProfile(); // 呼叫非同步函數
+    }, []); // 空依賴陣列，僅在組件掛載時執行
 
     return <>
         <div className='p-4'>
@@ -78,7 +88,7 @@ function Info() {
             <button className='btn btn-primary' type="button" onClick={() => handleModal()
             }>顯示用戶訊息</button>
             <br />
-            <button className='btn btn-primary' type="button" onClick={() => setSendNow(true)
+            <button className='btn btn-primary' type="button" onClick={() => handleLoggedIn()
             }>發送登入訊息給用戶</button>
             {isOpen && (
                 <div>
