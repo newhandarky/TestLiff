@@ -13,6 +13,7 @@ interface ProfileState {
 function Info() {
     const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
     const [profile, setProfile] = useState<ProfileState | null>(null);
+    const [message, setMessage] = useState<string>('');
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     // const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
@@ -67,6 +68,25 @@ function Info() {
         }
     };
 
+    const tryGetMessage = async () => {
+        try {
+            // 發送請求
+            axios.get(`${apiUrl}/hello`)
+                .then(response => {
+                    console.log('接收成功:', response.data);
+                    setMessage(response.data);
+                })
+                .catch(error => {
+                    console.error('請求發送失敗:', error);
+                    // 處理錯誤情況，例如提醒用戶
+                    alert('GET請求發送失敗');
+                });
+
+        } catch (error) {
+            console.error('取得訊息失敗:', error);
+        }
+    };
+
     useEffect(() => {
         // 等待 getProfile 完成，並取得用戶資料
         const fetchProfile = async () => {
@@ -83,12 +103,13 @@ function Info() {
     }, []); // 空依賴陣列，僅在組件掛載時執行
 
     return <>
-        <div className='p-4'>
+        <div className='p-4 '>
             <h2>Info Page</h2>
-            <button className='btn btn-primary' type="button" onClick={() => handleModal()
+            <button className='btn btn-primary mb-3' type="button" onClick={() => handleModal()
             }>顯示用戶訊息</button>
-            <br />
-            <button className='btn btn-primary' type="button" onClick={() => handleLoggedIn()
+            <button className='btn btn-primary mb-3' type="button" onClick={() => tryGetMessage()
+            }>{`${message && "測試GET方法"}`}</button>
+            <button className='btn btn-primary mb-3' type="button" onClick={() => handleLoggedIn()
             }>發送登入訊息給用戶</button>
             {isOpen && (
                 <div>
