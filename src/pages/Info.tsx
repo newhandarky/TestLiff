@@ -6,28 +6,21 @@ import liff from "@line/liff";
 import Profile from "../types/Profile";
 import useToggleHandle from '../hooks/useToggleHandle';
 
+// import { sendMessage, tryGetMessage, getFollowers } from "../utils/lineMessaging"
+
 interface ProfileState {
     profile: Profile;
 }
-
-// 定義錯誤回應資料的型別
-// interface ErrorResponseData {
-//     message: string;
-//     status: number;
-// }
-
-
 
 function Info() {
     const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
     const [profile, setProfile] = useState<ProfileState | null>(null);
     const [message, setMessage] = useState<string>('');
+    const [followers, setFollowers] = useState<number>(0);
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
-    // const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
     const apiUrl = import.meta.env.VITE_API_URL as string;
 
-    // const userId = localStorage.getItem("userId") || "defaultUserId";
     useEffect(() => {
         const initializeLiff = async () => {
             try {
@@ -51,9 +44,6 @@ function Info() {
 
     const sendMessage = async () => {
         try {
-            // 假設 apiUrl 是後端 API 的基礎 URL，例如 https://your-backend.com
-            const apiUrl = import.meta.env.VITE_API_URL;
-
             // 檢查 profile 是否存在，確保 userId 可用
             if (!profile?.profile?.userId) {
                 alert('找不到用戶 ID，無法發送訊息');
@@ -109,6 +99,53 @@ function Info() {
         }
     };
 
+    const getFollowers = async () => {
+        try {
+            const response = await axios.get(`${apiUrl}/webhook/get-followers`);
+            console.log('取得粉絲人數:', response.data);
+            setFollowers(response.data.followers);
+        } catch (error) {
+            console.error('取得粉絲人數失敗: in Info.tsx', error);
+        }
+    };
+
+    const shareTarget = async (message: string, option: boolean) => {
+        liff
+            .shareTargetPicker(
+                [
+                    {
+                        type: "text",
+                        text: "Hello, World!",
+                    },
+                    {
+                        type: "text",
+                        text: message,
+                    },
+                    {
+                        type: "text",
+                        text: "Goodbye, World!",
+                    },
+                ],
+                {
+                    isMultiple: option,
+                }
+            )
+            .then(function (res) {
+                if (res) {
+                    // succeeded in sending a message through TargetPicker
+                    console.log(`[${res.status}] Message sent!`);
+                } else {
+                    // sending message canceled
+                    console.log("TargetPicker was closed!");
+                }
+            })
+            .catch(function (error) {
+                // something went wrong before sending a message
+                console.log("something wrong happen");
+                throw error;
+            });
+    };
+
     useEffect(() => {
         // 等待 getProfile 完成，並取得用戶資料
         const fetchProfile = async () => {
@@ -134,6 +171,10 @@ function Info() {
             }>取得訊息{`${message && "：" + message}`}</button>
             <button className='btn btn-primary mb-3' type="button" onClick={() => sendMessage()
             }>發送登入訊息給用戶</button>
+            <button className='btn btn-primary mb-3' type="button" onClick={() => getFollowers()
+            }>{followers ? `關注人數：${followers}` : "取得關注人數"}</button>
+            <button className='btn btn-primary mb-3' type="button" onClick={() => shareTarget("單純測試", true)
+            }>選擇發送目標</button>
             {isOpen && (
                 <div>
                     <p>App Language: {liff.getAppLanguage()}</p>
