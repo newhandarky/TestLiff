@@ -21,8 +21,6 @@ function Info() {
 
     // const
     useEffect(() => {
-        console.log(liffId, "有無liffId？");
-
         const initializeLiff = async () => {
             try {
                 await liff.init({
@@ -51,8 +49,9 @@ function Info() {
                 message: "您已成功登入"
             }, {
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${yourToken}` 
+                },
             })
                 .then(response => {
                     console.log('傳送成功:', response.data);
@@ -75,7 +74,7 @@ function Info() {
             // 發送請求
             axios.get(`${apiUrl}/hello`)
                 .then(response => {
-                    console.log('接收成功:', response.data);
+                    console.log('接收成功:', response);
                     setMessage(response.data);
                 })
                 .catch(error => {
@@ -105,6 +104,7 @@ function Info() {
     }, []); // 空依賴陣列，僅在組件掛載時執行
 
     return <>
+        {console.log(message, "是否有訊息")}
         <div className='p-4 d-flex flex-column'>
             <h2>Info Page</h2>
             <button className='btn btn-primary mb-3' type="button" onClick={() => handleModal()
