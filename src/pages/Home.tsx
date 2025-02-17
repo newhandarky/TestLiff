@@ -57,6 +57,9 @@ function Home() {
         initializeLiff(); // 初始化 LIFF
     }, [liffId]);
 
+    useEffect(() => {
+        localStorage.setItem("userId", userData?.profile?.userId || "defaultUserId");
+    }, [isLoggedIn]);
 
     useEffect(() => {
         if (userData) {

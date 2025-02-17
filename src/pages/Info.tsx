@@ -10,6 +10,14 @@ interface ProfileState {
     profile: Profile;
 }
 
+// 定義錯誤回應資料的型別
+// interface ErrorResponseData {
+//     message: string;
+//     status: number;
+// }
+
+
+
 function Info() {
     const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
     const [profile, setProfile] = useState<ProfileState | null>(null);
@@ -19,7 +27,7 @@ function Info() {
     // const homePath = import.meta.env.VITE_LIFF_APP_HOME_PATH as string;
     const apiUrl = import.meta.env.VITE_API_URL as string;
 
-    // const
+    // const userId = localStorage.getItem("userId") || "defaultUserId";
     useEffect(() => {
         const initializeLiff = async () => {
             try {
@@ -41,31 +49,42 @@ function Info() {
         initializeLiff();
     }, []);
 
-    const handleLoggedIn = async () => {
+    const sendMessage = async () => {
         try {
-            // 發送請求
-            axios.post(`${apiUrl}/webhook/send-message`, {
-                userId: profile?.profile.userId, // 使用可選鏈接操作符檢查 profile 是否為 null
-                message: "您已成功登入"
+            // 假設 apiUrl 是後端 API 的基礎 URL，例如 https://your-backend.com
+            const apiUrl = import.meta.env.VITE_API_URL;
+
+            // 檢查 profile 是否存在，確保 userId 可用
+            if (!profile?.profile?.userId) {
+                alert('找不到用戶 ID，無法發送訊息');
+                return;
+            }
+
+            // 發送 POST 請求到後端 /send-message 路徑
+            const response = await axios.post(`${apiUrl}/webhook/send-message`, {
+                userId: profile.profile.userId, // 從 profile 中獲取 userId
+                message: "您已成功登入" // 要發送的訊息內容
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'Authorization': `Bearer ${yourToken}` 
+                    // 如果需要授權，可以在這裡添加 Authorization 標頭
+                    // 'Authorization': `Bearer ${yourToken}`
                 },
-            })
-                .then(response => {
-                    console.log('傳送成功:', response.data);
-                    // 你可以根據響應數據做進一步處理，例如彈出提示
-                    alert(response.data);
-                })
-                .catch(error => {
-                    console.error('在前端傳送失敗:', error);
-                    // 處理錯誤情況，例如提醒用戶
-                    alert('傳送訊息失敗');
-                });
+            });
 
-        } catch (error) {
-            console.error('傳送訊息失敗:', error);
+            console.log('傳送成功:', response.data);
+            alert('訊息已成功發送！');
+        } catch (error: unknown) {
+            // 使用 Axios 提供的工具進行類型檢查
+            if (axios.isAxiosError(error)) {
+                // Axios 錯誤，處理回應中的錯誤訊息
+                console.error('傳送訊息失敗（Axios 錯誤）:', error.response?.data || error.message);
+                alert(`傳送訊息失敗：${error.response?.data.message || '請稍後再試'}`);
+            } else {
+                // 非 Axios 錯誤，處理其他未知錯誤
+                console.error('傳送訊息失敗（未知錯誤）:', error);
+                alert('傳送訊息失敗，請稍後再試');
+            }
         }
     };
 
@@ -110,8 +129,8 @@ function Info() {
             <button className='btn btn-primary mb-3' type="button" onClick={() => handleModal()
             }>顯示用戶訊息</button>
             <button className='btn btn-primary mb-3' type="button" onClick={() => tryGetMessage()
-            }>取得訊息{`${message && "測試GET方法"}`}</button>
-            <button className='btn btn-primary mb-3' type="button" onClick={() => handleLoggedIn()
+            }>取得訊息{`${message && "：" + message}`}</button>
+            <button className='btn btn-primary mb-3' type="button" onClick={() => sendMessage()
             }>發送登入訊息給用戶</button>
             {isOpen && (
                 <div>
