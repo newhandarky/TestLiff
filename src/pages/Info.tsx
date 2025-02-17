@@ -77,6 +77,8 @@ function Info() {
         } catch (error: unknown) {
             // 使用 Axios 提供的工具進行類型檢查
             if (axios.isAxiosError(error)) {
+                console.log(error);
+
                 // Axios 錯誤，處理回應中的錯誤訊息
                 console.error('傳送訊息失敗（Axios 錯誤）:', error.response?.data || error.message);
                 alert(`傳送訊息失敗：${error.response?.data.message || '請稍後再試'}`);
