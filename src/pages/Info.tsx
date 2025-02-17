@@ -21,6 +21,8 @@ function Info() {
 
     // const
     useEffect(() => {
+        console.log(liffId, "有無liffId？");
+
         const initializeLiff = async () => {
             try {
                 await liff.init({
@@ -39,7 +41,7 @@ function Info() {
             }
         };
         initializeLiff();
-    }, [liffId]);
+    }, []);
 
     const handleLoggedIn = async () => {
         try {
