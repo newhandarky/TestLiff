@@ -103,7 +103,7 @@ function Info() {
     }, []); // 空依賴陣列，僅在組件掛載時執行
 
     return <>
-        <div className='p-4 '>
+        <div className='p-4 d-flex flex-column'>
             <h2>Info Page</h2>
             <button className='btn btn-primary mb-3' type="button" onClick={() => handleModal()
             }>顯示用戶訊息</button>
