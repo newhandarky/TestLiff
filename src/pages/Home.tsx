@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import liff from '@line/liff';
 
 import Profile from '../types/Profile';
@@ -16,8 +16,8 @@ function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const navigate = useNavigate();
-    const location = useLocation();
-    console.log(location.pathname, ": 路徑");
+    // const location = useLocation();
+    // console.log(location.pathname, ": 路徑");
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
 
