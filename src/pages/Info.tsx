@@ -108,7 +108,7 @@ function Info() {
             <button className='btn btn-primary mb-3' type="button" onClick={() => handleModal()
             }>顯示用戶訊息</button>
             <button className='btn btn-primary mb-3' type="button" onClick={() => tryGetMessage()
-            }>{`${message && "測試GET方法"}`}</button>
+            }>取得訊息{`${message && "測試GET方法"}`}</button>
             <button className='btn btn-primary mb-3' type="button" onClick={() => handleLoggedIn()
             }>發送登入訊息給用戶</button>
             {isOpen && (
