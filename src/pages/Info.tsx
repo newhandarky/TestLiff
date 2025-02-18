@@ -28,6 +28,10 @@ function Info() {
                     liffId: liffId,
                 });
 
+                if (!liff.isInClient()) {
+                    alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
+                }
+
                 if (!liff.isLoggedIn()) {
                     console.log("尚未登入");
                     liff.login();
