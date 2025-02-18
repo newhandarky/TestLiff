@@ -38,7 +38,7 @@ function Home() {
                 await liff.init({
                     liffId: liffId,
                 });
-                console.log('LIFF initialized');
+                console.log(liffId, 'LIFF initialized');
 
                 // 等待 LIFF 準備完成
                 await liff.ready;
