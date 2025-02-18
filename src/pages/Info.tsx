@@ -109,6 +109,7 @@ function Info() {
         }
     };
 
+    // const shareTarget = async () => {
     const shareTarget = async (message: string, option: boolean) => {
         liff
             .shareTargetPicker(
@@ -144,6 +145,27 @@ function Info() {
                 console.log("something wrong happen");
                 throw error;
             });
+
+        if (liff.isApiAvailable('shareTargetPicker')) {
+            console.log("shareTargetPicker is available");
+
+        } else {
+            console.log("shareTargetPicker is not available");
+
+        }
+    };
+
+    const scanCode = async () => {
+        liff
+            .scanCodeV2()
+            .then((result) => {
+                // result = { value: "" }
+                console.log("result", result.value);
+
+            })
+            .catch((error) => {
+                console.log("error", error);
+            });
     };
 
     useEffect(() => {
@@ -173,7 +195,9 @@ function Info() {
             }>發送登入訊息給用戶</button>
             <button className='btn btn-primary mb-3' type="button" onClick={() => getFollowers()
             }>{followers ? `關注人數：${followers}` : "取得關注人數"}</button>
-            <button className='btn btn-primary mb-3' type="button" onClick={() => shareTarget("單純測試", true)
+            {/* <button className='btn btn-primary mb-3' type="button" onClick={() => shareTarget("單純測試", true)
+            }>選擇發送目標</button> */}
+            <button className='btn btn-primary mb-3' type="button" onClick={() => shareTarget()
             }>選擇發送目標</button>
             {isOpen && (
                 <div>
