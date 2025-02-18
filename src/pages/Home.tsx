@@ -64,10 +64,8 @@ function Home() {
     useEffect(() => {
         if (userData) {
             console.log(liff, "liff");
-
             console.log('User Data:', userData)
         }
-
     }, [userData])
 
     return (

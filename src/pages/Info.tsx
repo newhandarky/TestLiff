@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
 import liff from "@line/liff";
 
 import Profile from "../types/Profile";
 import useToggleHandle from '../hooks/useToggleHandle';
+import QrCodeGenerator from './components/QrCodeGenerator';
 
 // import { sendMessage, tryGetMessage, getFollowers } from "../utils/lineMessaging"
 
@@ -17,33 +17,10 @@ function Info() {
     const [profile, setProfile] = useState<ProfileState | null>(null);
     const [message, setMessage] = useState<string>('');
     const [followers, setFollowers] = useState<number>(0);
+    const [scanResult, setScanResult] = useState<string>('');
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const apiUrl = import.meta.env.VITE_API_URL as string;
-
-    useEffect(() => {
-        const initializeLiff = async () => {
-            try {
-                await liff.init({
-                    liffId: liffId,
-                });
-                if (liff.isInClient()) {
-                    alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
-                }
-
-                if (!liff.isLoggedIn()) {
-                    console.log("尚未登入");
-                    liff.login();
-                } else {
-                    console.log(liff.isLoggedIn(), "已經登入");
-                }
-
-            } catch (error) {
-                console.error('Error initializing LIFF:', error);
-            }
-        };
-        initializeLiff();
-    }, []);
 
     const sendMessage = async () => {
         try {
@@ -162,14 +139,37 @@ function Info() {
         liff
             .scanCodeV2()
             .then((result) => {
-                // result = { value: "" }
+                setScanResult(result.value as string || "");
                 console.log("result", result.value);
-
             })
             .catch((error) => {
                 console.log("error", error);
             });
     };
+
+    useEffect(() => {
+        const initializeLiff = async () => {
+            try {
+                await liff.init({
+                    liffId: liffId,
+                });
+                if (liff.isInClient()) {
+                    alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
+                }
+
+                if (!liff.isLoggedIn()) {
+                    console.log("尚未登入");
+                    liff.login();
+                } else {
+                    console.log(liff.isLoggedIn(), "已經登入");
+                }
+
+            } catch (error) {
+                console.error('Error initializing LIFF:', error);
+            }
+        };
+        initializeLiff();
+    }, []);
 
     useEffect(() => {
         // 等待 getProfile 完成，並取得用戶資料
@@ -211,6 +211,18 @@ function Info() {
                     <p>Logged In: {liff.isLoggedIn() ? 'Yes' : 'No'}</p>
                 </div>
             )}
+
+            <div>
+                <QrCodeGenerator
+                />
+                {
+                    scanResult &&
+                    <div className="mt-3">
+                        <h5>Scan Result</h5>
+                        <p>{scanResult}</p>
+                    </div>
+                }
+            </div>
         </div>
     </>;
 }
