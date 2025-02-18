@@ -19,7 +19,7 @@ function Info() {
     const [followers, setFollowers] = useState<number>(0);
     const [scanResult, setScanResult] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
-    const [isLiffReady, setIsLiffReady] = useState(false);
+    // const [isLiffReady, setIsLiffReady] = useState(false);
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const apiUrl = import.meta.env.VITE_API_URL as string;
@@ -27,7 +27,7 @@ function Info() {
     const sendMessage = async () => {
         try {
             // 檢查 profile 是否存在，確保 userId 可用
-            if (!isLiffReady || !profile?.profile?.userId) {
+            if (!profile?.profile?.userId) {
                 alert('找不到用戶 ID，無法發送訊息');
                 return;
             }
@@ -190,47 +190,60 @@ function Info() {
     // }, []);
 
 
-    useEffect(() => {
-        // 等待 getProfile 完成，並取得用戶資料
-        // const fetchProfile = async () => {
-        //     try {
-        //         const data = await liff.getProfile(); // 獲取用戶資料
-        //         console.log(data.displayName, "用戶資訊");
-        //         setUserName(data.displayName);
-        //         setProfile({ profile: data }); // 將資料存入狀態
-        //     } catch (error) {
-        //         console.error("取得用戶資訊時發生錯誤:", error);
-        //     }
-        // };
-        const fetchProfile = async () => {
-            if (!isLiffReady) return;
-            try {
-                const data = await liff.getProfile(); // 獲取用戶資料
-                console.log(data.displayName, "用戶資訊");
-                setUserName(data.displayName);
-                setProfile({ profile: data }); // 將資料存入狀態
-            } catch (error) {
-                console.error("取得用戶資訊時發生錯誤:", error);
-            }
-        };
+    // useEffect(() => {
+    //     // 等待 getProfile 完成，並取得用戶資料
+    //     const fetchProfile = async () => {
+    //         try {
+    //             const data = await liff.getProfile(); // 獲取用戶資料
+    //             console.log(data.displayName, "用戶資訊");
+    //             setUserName(data.displayName);
+    //             setProfile({ profile: data }); // 將資料存入狀態
+    //         } catch (error) {
+    //             console.error("取得用戶資訊時發生錯誤:", error);
+    //         }
+    //     };
 
-        fetchProfile(); // 呼叫非同步函數
-    }, []); // 空依賴陣列，僅在組件掛載時執行
+    //     fetchProfile(); // 呼叫非同步函數
+    // }, []); // 空依賴陣列，僅在組件掛載時執行
 
     useEffect(() => {
         const initializeLiff = async () => {
             try {
+                // 初始化 LIFF
                 await liff.init({ liffId: liffId });
+
+                // 確認是否在 LINE 客戶端內
                 if (!liff.isInClient()) {
                     alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
                 }
 
-                // 等待 LIFF 准備完成
+                // 等待 LIFF 準備完成
                 await liff.ready;
+                console.log("LIFF is ready");
 
-                setIsLiffReady(true); // 设置LIFF已经准备好的状态
+                // 確認登入狀態
+                if (!liff.isLoggedIn()) {
+                    console.log("尚未登入");
+                    liff.login();
+                    return; // 登入後會重新載入頁面，後續程式碼不需要執行
+                } else {
+                    console.log("已經登入");
+                }
+
+                // 獲取 LINE App 版本
+                const version = liff.getLineVersion();
+                console.log("LINE App Version:", version);
+
+                // 獲取用戶資料
+                const data = await liff.getProfile();
+                console.log(data.displayName, "用戶資訊");
+
+                // 設定用戶資料到狀態
+                setUserName(data.displayName);
+                setProfile({ profile: data });
+
             } catch (error) {
-                console.error('Error initializing LIFF:', error);
+                console.error('Error initializing LIFF or fetching user profile:', error);
             }
         };
 
