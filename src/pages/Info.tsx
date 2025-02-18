@@ -207,6 +207,7 @@ function Info() {
     // }, []); // 空依賴陣列，僅在組件掛載時執行
 
     useEffect(() => {
+        console.log(liff.isInClient() ? 'init前判斷 is in client' : 'init前判斷 not in client');
         const initializeLiff = async () => {
             try {
                 // 初始化 LIFF

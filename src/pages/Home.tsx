@@ -32,6 +32,8 @@ function Home() {
     };
 
     useEffect(() => {
+        console.log(liff.isInClient() ? 'init前判斷 is in client' : 'init前判斷 not in client');
+
         const initializeLiff = async () => {
 
             try {
