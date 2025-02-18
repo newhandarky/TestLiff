@@ -211,17 +211,17 @@ function Info() {
             try {
                 // 初始化 LIFF
                 await liff.init({ liffId: liffId });
-
-                const isInClient = await liff.isInClient()
-
-                // 確認是否在 LINE 客戶端內
-                if (!isInClient) {
-                    alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
-                }
+                console.log("LIFF 初始化成功");
 
                 // 等待 LIFF 準備完成
                 await liff.ready;
                 console.log("LIFF is ready");
+
+                // 確認是否在 LINE 客戶端內
+                if (!liff.isInClient()) {
+                    console.warn("不在 LINE 客戶端內");
+                    alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
+                }
 
                 // 確認登入狀態
                 if (!liff.isLoggedIn()) {
