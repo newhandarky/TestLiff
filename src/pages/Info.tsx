@@ -155,18 +155,18 @@ function Info() {
         }
     };
 
-    const scanCode = async () => {
-        liff
-            .scanCodeV2()
-            .then((result) => {
-                // result = { value: "" }
-                console.log("result", result.value);
+    // const scanCode = async () => {
+    //     liff
+    //         .scanCodeV2()
+    //         .then((result) => {
+    //             // result = { value: "" }
+    //             console.log("result", result.value);
 
-            })
-            .catch((error) => {
-                console.log("error", error);
-            });
-    };
+    //         })
+    //         .catch((error) => {
+    //             console.log("error", error);
+    //         });
+    // };
 
     useEffect(() => {
         // 等待 getProfile 完成，並取得用戶資料
@@ -197,7 +197,7 @@ function Info() {
             }>{followers ? `關注人數：${followers}` : "取得關注人數"}</button>
             {/* <button className='btn btn-primary mb-3' type="button" onClick={() => shareTarget("單純測試", true)
             }>選擇發送目標</button> */}
-            <button className='btn btn-primary mb-3' type="button" onClick={() => shareTarget()
+            <button className='btn btn-primary mb-3' type="button" onClick={() => shareTarget("我只是測試", true)
             }>選擇發送目標</button>
             {isOpen && (
                 <div>
