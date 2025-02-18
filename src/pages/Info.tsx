@@ -152,27 +152,61 @@ function Info() {
         }
     };
 
+    // useEffect(() => {
+    //     const initializeLiff = async () => {
+    //         try {
+    //             await liff.init({
+    //                 liffId: liffId,
+    //             });
+    //             if (liff.isInClient()) {
+    //                 alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
+    //             }
+
+    //             await liff.ready;
+    //             console.log("LIFF is ready");
+    //             if (!liff.isLoggedIn()) {
+    //                 console.log("尚未登入");
+    //                 liff.login();
+    //             } else {
+    //                 console.log(liff.isLoggedIn(), "已經登入");
+    //             }
+
+    //         } catch (error) {
+    //             console.error('Error initializing LIFF:', error);
+    //         }
+    //     };
+    //     initializeLiff();
+    // }, []);
+
     useEffect(() => {
-        const initializeLiff = async () => {
-            try {
-                await liff.init({
-                    liffId: liffId,
+        const initializeLiff = () => {
+            liff.init({ liffId: liffId })
+                .then(() => {
+                    if (liff.isInClient()) {
+                        alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
+                    }
+
+                    return liff.ready; // 等待 LIFF 準備完成
+                })
+                .then(() => {
+                    console.log("LIFF is ready");
+                    if (!liff.isLoggedIn()) {
+                        console.log("尚未登入");
+                        liff.login();
+                    } else {
+                        console.log(liff.isLoggedIn(), "已經登入");
+                    }
+                })
+                .then(() => {
+                    liff.getLineVersion()
+                }).then(version => {
+                    console.log("LINE App Version:", version);
+                })
+                .catch((error) => {
+                    console.error('Error initializing LIFF:', error);
                 });
-                if (liff.isInClient()) {
-                    alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
-                }
-
-                if (!liff.isLoggedIn()) {
-                    console.log("尚未登入");
-                    liff.login();
-                } else {
-                    console.log(liff.isLoggedIn(), "已經登入");
-                }
-
-            } catch (error) {
-                console.error('Error initializing LIFF:', error);
-            }
         };
+
         initializeLiff();
     }, []);
 
