@@ -40,6 +40,16 @@ function Home() {
                 });
                 console.log('LIFF initialized');
 
+                // 等待 LIFF 準備完成
+                await liff.ready;
+                console.log("LIFF is ready");
+
+                // 確認是否在 LINE 客戶端內
+                if (!liff.isInClient()) {
+                    console.warn("不在 LINE 客戶端內");
+                    alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
+                }
+
                 if (!liff.isLoggedIn()) {
                     console.log("尚未登入");
                     setIsLoggedIn(false);
@@ -53,18 +63,7 @@ function Home() {
             }
         };
         initializeLiff(); // 初始化 LIFF
-    }, [liffId]);
-
-    useEffect(() => {
-        localStorage.setItem("userId", userData?.profile?.userId || "defaultUserId");
-    }, [isLoggedIn]);
-
-    useEffect(() => {
-        if (userData) {
-            console.log(liff, "liff");
-            console.log('User Data:', userData)
-        }
-    }, [userData])
+    }, []);
 
     return (
         <>
