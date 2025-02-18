@@ -27,8 +27,7 @@ function Info() {
                 await liff.init({
                     liffId: liffId,
                 });
-
-                if (!liff.isInClient()) {
+                if (liff.isInClient()) {
                     alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
                 }
 
@@ -159,18 +158,18 @@ function Info() {
         }
     };
 
-    // const scanCode = async () => {
-    //     liff
-    //         .scanCodeV2()
-    //         .then((result) => {
-    //             // result = { value: "" }
-    //             console.log("result", result.value);
+    const scanCode = async () => {
+        liff
+            .scanCodeV2()
+            .then((result) => {
+                // result = { value: "" }
+                console.log("result", result.value);
 
-    //         })
-    //         .catch((error) => {
-    //             console.log("error", error);
-    //         });
-    // };
+            })
+            .catch((error) => {
+                console.log("error", error);
+            });
+    };
 
     useEffect(() => {
         // 等待 getProfile 完成，並取得用戶資料
@@ -199,10 +198,10 @@ function Info() {
             }>發送登入訊息給用戶</button>
             <button className='btn btn-primary mb-3' type="button" onClick={() => getFollowers()
             }>{followers ? `關注人數：${followers}` : "取得關注人數"}</button>
-            {/* <button className='btn btn-primary mb-3' type="button" onClick={() => shareTarget("單純測試", true)
-            }>選擇發送目標</button> */}
             <button className='btn btn-primary mb-3' type="button" onClick={() => shareTarget("我只是測試", true)
             }>選擇發送目標</button>
+            <button className='btn btn-primary mb-3' type="button" onClick={() => scanCode()
+            }>開啟掃描</button>
             {isOpen && (
                 <div>
                     <p>App Language: {liff.getAppLanguage()}</p>
