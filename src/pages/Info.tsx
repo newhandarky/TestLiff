@@ -18,6 +18,8 @@ function Info() {
     const [message, setMessage] = useState<string>('');
     const [followers, setFollowers] = useState<number>(0);
     const [scanResult, setScanResult] = useState<string>('');
+    const [userName, setUserName] = useState<string>('');
+    const [isLiffReady, setIsLiffReady] = useState(false);
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const apiUrl = import.meta.env.VITE_API_URL as string;
@@ -25,7 +27,7 @@ function Info() {
     const sendMessage = async () => {
         try {
             // 檢查 profile 是否存在，確保 userId 可用
-            if (!profile?.profile?.userId) {
+            if (!isLiffReady || !profile?.profile?.userId) {
                 alert('找不到用戶 ID，無法發送訊息');
                 return;
             }
@@ -153,73 +155,59 @@ function Info() {
     };
 
     // useEffect(() => {
-    //     const initializeLiff = async () => {
-    //         try {
-    //             await liff.init({
-    //                 liffId: liffId,
+    //     const initializeLiff = () => {
+    //         liff.init({ liffId: liffId })
+    //             .then(() => {
+    //                 // 確認是否在 LINE 客戶端內
+    //                 if (!liff.isInClient()) {
+    //                     alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
+    //                 }
+
+    //                 // 等待 LIFF 準備完成
+    //                 return liff.ready;
+    //             })
+    //             .then(() => {
+    //                 console.log("LIFF is ready");
+
+    //                 // 確認登入狀態
+    //                 if (!liff.isLoggedIn()) {
+    //                     console.log("尚未登入");
+    //                     liff.login();
+    //                 } else {
+    //                     console.log("已經登入");
+    //                 }
+
+    //                 // 獲取 LINE App 版本
+    //                 const version = liff.getLineVersion();
+    //                 console.log("LINE App Version:", version);
+    //             })
+    //             .catch((error) => {
+    //                 console.error('Error initializing LIFF:', error);
     //             });
-    //             if (liff.isInClient()) {
-    //                 alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
-    //             }
-
-    //             await liff.ready;
-    //             console.log("LIFF is ready");
-    //             if (!liff.isLoggedIn()) {
-    //                 console.log("尚未登入");
-    //                 liff.login();
-    //             } else {
-    //                 console.log(liff.isLoggedIn(), "已經登入");
-    //             }
-
-    //         } catch (error) {
-    //             console.error('Error initializing LIFF:', error);
-    //         }
     //     };
+
     //     initializeLiff();
     // }, []);
-
-    useEffect(() => {
-        const initializeLiff = () => {
-            liff.init({ liffId: liffId })
-                .then(() => {
-                    // 確認是否在 LINE 客戶端內
-                    if (!liff.isInClient()) {
-                        alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
-                    }
-
-                    // 等待 LIFF 準備完成
-                    return liff.ready;
-                })
-                .then(() => {
-                    console.log("LIFF is ready");
-
-                    // 確認登入狀態
-                    if (!liff.isLoggedIn()) {
-                        console.log("尚未登入");
-                        liff.login();
-                    } else {
-                        console.log("已經登入");
-                    }
-
-                    // 獲取 LINE App 版本
-                    const version = liff.getLineVersion();
-                    console.log("LINE App Version:", version);
-                })
-                .catch((error) => {
-                    console.error('Error initializing LIFF:', error);
-                });
-        };
-
-        initializeLiff();
-    }, []);
 
 
     useEffect(() => {
         // 等待 getProfile 完成，並取得用戶資料
+        // const fetchProfile = async () => {
+        //     try {
+        //         const data = await liff.getProfile(); // 獲取用戶資料
+        //         console.log(data.displayName, "用戶資訊");
+        //         setUserName(data.displayName);
+        //         setProfile({ profile: data }); // 將資料存入狀態
+        //     } catch (error) {
+        //         console.error("取得用戶資訊時發生錯誤:", error);
+        //     }
+        // };
         const fetchProfile = async () => {
+            if (!isLiffReady) return;
             try {
                 const data = await liff.getProfile(); // 獲取用戶資料
                 console.log(data.displayName, "用戶資訊");
+                setUserName(data.displayName);
                 setProfile({ profile: data }); // 將資料存入狀態
             } catch (error) {
                 console.error("取得用戶資訊時發生錯誤:", error);
@@ -229,10 +217,32 @@ function Info() {
         fetchProfile(); // 呼叫非同步函數
     }, []); // 空依賴陣列，僅在組件掛載時執行
 
+    useEffect(() => {
+        const initializeLiff = async () => {
+            try {
+                await liff.init({ liffId: liffId });
+                if (!liff.isInClient()) {
+                    alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
+                }
+
+                // 等待 LIFF 准備完成
+                await liff.ready;
+
+                setIsLiffReady(true); // 设置LIFF已经准备好的状态
+            } catch (error) {
+                console.error('Error initializing LIFF:', error);
+            }
+        };
+
+        initializeLiff();
+    }, []);
+
     return <>
         {console.log(message, "是否有訊息")}
         <div className='p-4 d-flex flex-column'>
-            <h2>Info Page</h2>
+            {
+                userName && <h2>{userName} 歡迎你回來</h2>
+            }
             <button className='btn btn-primary mb-3' type="button" onClick={() => handleModal()
             }>顯示用戶訊息</button>
             <button className='btn btn-primary mb-3' type="button" onClick={() => tryGetMessage()
@@ -256,8 +266,7 @@ function Info() {
             )}
 
             <div>
-                <QrCodeGenerator
-                />
+                <QrCodeGenerator />
                 {
                     scanResult &&
                     <div className="mt-3 text-center">
