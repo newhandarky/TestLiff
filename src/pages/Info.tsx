@@ -182,24 +182,27 @@ function Info() {
         const initializeLiff = () => {
             liff.init({ liffId: liffId })
                 .then(() => {
-                    if (liff.isInClient()) {
+                    // 確認是否在 LINE 客戶端內
+                    if (!liff.isInClient()) {
                         alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
                     }
 
-                    return liff.ready; // 等待 LIFF 準備完成
+                    // 等待 LIFF 準備完成
+                    return liff.ready;
                 })
                 .then(() => {
                     console.log("LIFF is ready");
+
+                    // 確認登入狀態
                     if (!liff.isLoggedIn()) {
                         console.log("尚未登入");
                         liff.login();
                     } else {
-                        console.log(liff.isLoggedIn(), "已經登入");
+                        console.log("已經登入");
                     }
-                })
-                .then(() => {
-                    liff.getLineVersion()
-                }).then(version => {
+
+                    // 獲取 LINE App 版本
+                    const version = liff.getLineVersion();
                     console.log("LINE App Version:", version);
                 })
                 .catch((error) => {
@@ -209,6 +212,7 @@ function Info() {
 
         initializeLiff();
     }, []);
+
 
     useEffect(() => {
         // 等待 getProfile 完成，並取得用戶資料
