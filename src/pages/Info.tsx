@@ -212,8 +212,10 @@ function Info() {
                 // 初始化 LIFF
                 await liff.init({ liffId: liffId });
 
+                const isInClient = await liff.isInClient()
+
                 // 確認是否在 LINE 客戶端內
-                if (!liff.isInClient()) {
+                if (!isInClient) {
                     alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
                 }
 
