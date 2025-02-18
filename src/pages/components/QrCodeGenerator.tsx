@@ -9,7 +9,7 @@ const QrCodeGenerator: React.FC = () => {
     };
 
     return (
-        <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <div style={{ textAlign: "center" }}>
             <h1>QR Code Generator</h1>
             <input
                 type="text"
@@ -18,8 +18,7 @@ const QrCodeGenerator: React.FC = () => {
                 placeholder="Enter URL"
                 style={{
                     padding: "10px",
-                    width: "300px",
-                    marginBottom: "20px",
+                    width: "240px",
                     fontSize: "16px",
                 }}
             />
@@ -31,7 +30,7 @@ const QrCodeGenerator: React.FC = () => {
                     fgColor="#000000"
                     qrStyle="squares"
                     logoImage="/original.jpg" // 可選：嵌入 Logo
-                    logoWidth={60}
+                    logoWidth={40}
                 />
             </div>
         </div>

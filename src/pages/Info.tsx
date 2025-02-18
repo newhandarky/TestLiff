@@ -91,60 +91,65 @@ function Info() {
 
     // const shareTarget = async () => {
     const shareTarget = async (message: string, option: boolean) => {
-        liff
-            .shareTargetPicker(
-                [
-                    {
-                        type: "text",
-                        text: "Hello, World!",
-                    },
-                    {
-                        type: "text",
-                        text: message,
-                    },
-                    {
-                        type: "text",
-                        text: "Goodbye, World!",
-                    },
-                ],
-                {
-                    isMultiple: option,
-                }
-            )
-            .then(function (res) {
-                if (res) {
-                    // succeeded in sending a message through TargetPicker
-                    console.log(`[${res.status}] Message sent!`);
-                } else {
-                    // sending message canceled
-                    console.log("TargetPicker was closed!");
-                }
-            })
-            .catch(function (error) {
-                // something went wrong before sending a message
-                console.log("something wrong happen");
-                throw error;
-            });
-
         if (liff.isApiAvailable('shareTargetPicker')) {
-            console.log("shareTargetPicker is available");
-
+            liff
+                .shareTargetPicker(
+                    [
+                        {
+                            type: "text",
+                            text: "Hello, World!",
+                        },
+                        {
+                            type: "text",
+                            text: message,
+                        },
+                        {
+                            type: "text",
+                            text: "Goodbye, World!",
+                        },
+                    ],
+                    {
+                        isMultiple: option,
+                    }
+                )
+                .then(function (res) {
+                    if (res) {
+                        // succeeded in sending a message through TargetPicker
+                        console.log(`[${res.status}] Message sent!`);
+                    } else {
+                        // sending message canceled
+                        console.log("TargetPicker was closed!");
+                    }
+                })
+                .catch(function (error) {
+                    // something went wrong before sending a message
+                    console.log("something wrong happen");
+                    throw error;
+                });
+            if (liff.isApiAvailable('shareTargetPicker')) {
+                console.log("shareTargetPicker is available");
+            } else {
+                console.log("shareTargetPicker is not available");
+            }
         } else {
             console.log("shareTargetPicker is not available");
-
         }
     };
 
     const scanCode = async () => {
-        liff
-            .scanCodeV2()
-            .then((result) => {
-                setScanResult(result.value as string || "");
-                console.log("result", result.value);
-            })
-            .catch((error) => {
-                console.log("error", error);
-            });
+        if (liff.isApiAvailable('scanCodeV2')) {
+            liff
+                .scanCodeV2()
+                .then((result) => {
+                    setScanResult(result.value as string || "");
+                    console.log("result", result.value);
+                })
+                .catch((error) => {
+                    console.log("error", error);
+                });
+        } else {
+            console.log("scanCodeV2 is not available");
+        }
     };
 
     useEffect(() => {
@@ -217,7 +222,7 @@ function Info() {
                 />
                 {
                     scanResult &&
-                    <div className="mt-3">
+                    <div className="mt-3 text-center">
                         <h5>Scan Result</h5>
                         <p>{scanResult}</p>
                     </div>

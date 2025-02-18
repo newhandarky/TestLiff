@@ -16,8 +16,6 @@ function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const navigate = useNavigate();
-    // const location = useLocation();
-    // console.log(location.pathname, ": 路徑");
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
 
