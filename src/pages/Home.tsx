@@ -38,7 +38,7 @@ function Home() {
     };
 
     const login = () => {
-        console.log(liff.login(), "liff.login(),");
+        console.log(liff, "liff.login(),");
         liff.login();
     }
 
@@ -46,6 +46,9 @@ function Home() {
     const initializeLiff = async () => {
 
         console.log(liffId, "liffId");
+
+        console.log("環境：", import.meta.env.VITE_MODE);
+
 
         try {
             await liff.init({
@@ -93,17 +96,15 @@ function Home() {
                 isInClient: () => true, // 模擬在 LINE 客戶端內運行
             });
 
-
-            console.log('LIFF 初始化成功');
         } catch (error) {
             console.error('LIFF 初始化失敗:', error);
         }
     };
 
     useEffect(() => {
-        console.log(process.env.NODE_ENV === 'production' ? "正式環境" : "開發環境");
+        console.log(import.meta.env.VITE_MODE === 'production' ? "正式環境" : "開發環境");
 
-        if (process.env.NODE_ENV !== 'production') {
+        if (import.meta.env.VITE_MODE === 'production') {
             initializeLiff(); // 正式環境初始化 LIFF
         } else {
             initializeLiffForTest() // 測試環境用
