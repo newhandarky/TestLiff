@@ -23,7 +23,7 @@ function Home() {
 
 
     const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
-    // const homePath = import.meta.env.VITE_HOME_PATH as string;
+    const homePath = import.meta.env.VITE_HOME_PATH as string;
 
     const fetchProfile = async () => {
         try {
@@ -39,7 +39,7 @@ function Home() {
 
     const login = () => {
         console.log(liff, "liff.login(),");
-        liff.login();
+        liff.login({ redirectUri: homePath });
     }
 
     // 正式環境下使用 LIFF 初始化
