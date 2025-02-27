@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
+// import axios from "axios";
 import { useEffect, useState } from "react";
 import { FlexMessage } from "../types/Message";
 
@@ -23,9 +23,9 @@ function SettingMessage() {
 
     const sendDefaultMessage = async () => {
         try {
-            const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, jsonData);
-            console.log(jsonData, "預設訊息");
-            console.log(response.data);
+            console.log(jsonData, "預設訊息", apiUrl);
+            // const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, jsonData);
+            // console.log(response.data, "回傳資料");
         } catch (error) {
             console.error("前端錯誤", error);
         }
