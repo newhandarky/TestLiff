@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import liff from "@line/liff";
 
+import { useNavigate } from "react-router-dom";
+
 import Profile from "../types/Profile";
 // import { FlexMessage } from "../types/Message";`
 import useToggleHandle from '../hooks/useToggleHandle';
@@ -14,6 +16,8 @@ interface ProfileState {
 }
 
 function Info() {
+    const navigate = useNavigate();
+
     const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
     const [profile, setProfile] = useState<ProfileState | null>(null);
     const [message, setMessage] = useState<string>('');
@@ -299,61 +303,13 @@ function Info() {
         }
     };
 
-    // useEffect(() => {
-    //     const initializeLiff = () => {
-    //         liff.init({ liffId: liffId })
-    //             .then(() => {
-    //                 // 確認是否在 LINE 客戶端內
-    //                 if (!liff.isInClient()) {
-    //                     alert('請在 LINE App 中開啟此連結，以獲得完整功能！');
-    //                 }
-
-    //                 // 等待 LIFF 準備完成
-    //                 return liff.ready;
-    //             })
-    //             .then(() => {
-    //                 console.log("LIFF is ready");
-
-    //                 // 確認登入狀態
-    //                 if (!liff.isLoggedIn()) {
-    //                     console.log("尚未登入");
-    //                     liff.login();
-    //                 } else {
-    //                     console.log("已經登入");
-    //                 }
-
-    //                 // 獲取 LINE App 版本
-    //                 const version = liff.getLineVersion();
-    //                 console.log("LINE App Version:", version);
-    //             })
-    //             .catch((error) => {
-    //                 console.error('Error initializing LIFF:', error);
-    //             });
-    //     };
-
-    //     initializeLiff();
-    // }, []);
-
-
-    // useEffect(() => {
-    //     // 等待 getProfile 完成，並取得用戶資料
-    //     const fetchProfile = async () => {
-    //         try {
-    //             const data = await liff.getProfile(); // 獲取用戶資料
-    //             console.log(data.displayName, "用戶資訊");
-    //             setUserName(data.displayName);
-    //             setProfile({ profile: data }); // 將資料存入狀態
-    //         } catch (error) {
-    //             console.error("取得用戶資訊時發生錯誤:", error);
-    //         }
-    //     };
-
-    //     fetchProfile(); // 呼叫非同步函數
-    // }, []); // 空依賴陣列，僅在組件掛載時執行
+    const goToSettimgMessage = () => {
+        navigate("/setting-message");
+    };
 
     useEffect(() => {
-        console.log(liff.isInClient() ? 'init前判斷 is in client' : 'init前判斷 not in client');
         const initializeLiff = async () => {
+            console.log(liff.isInClient() ? 'init前判斷 is in client' : 'init前判斷 not in client');
             try {
                 // 初始化 LIFF
                 await liff.init({ liffId: liffId });
@@ -366,6 +322,8 @@ function Info() {
                 // 確認是否在 LINE 客戶端內
                 if (!liff.isInClient()) {
                     console.warn("不在 LINE 客戶端內");
+                } else {
+                    console.log("在 LINE 客戶端內");
                 }
 
                 // 確認登入狀態
@@ -415,6 +373,8 @@ function Info() {
             }>選擇發送目標</button>
             <button className='btn btn-primary mb-3' type="button" onClick={() => scanCode()
             }>開啟掃描</button>
+            <button className='btn btn-primary mb-3' type="button" onClick={() => goToSettimgMessage()
+            }>編輯訊息頁面</button>
             {isOpen && (
                 <div>
                     <p>App Language: {liff.getAppLanguage()}</p>
