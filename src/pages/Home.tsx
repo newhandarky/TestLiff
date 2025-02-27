@@ -122,6 +122,12 @@ function Home() {
 
     }, []);
 
+    useEffect(() => {
+        if (userData) {
+            console.log(userData, "userData")
+        }
+    }, [userData]);
+
     return (
         <>
             <div className='p-4'>

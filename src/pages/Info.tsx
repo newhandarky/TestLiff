@@ -3,6 +3,7 @@ import axios from 'axios';
 import liff from "@line/liff";
 
 import { useNavigate } from "react-router-dom";
+// import { useLiffContext } from '../utils/LiffProvider';
 
 import Profile from "../types/Profile";
 // import { FlexMessage } from "../types/Message";`
@@ -17,6 +18,7 @@ interface ProfileState {
 
 function Info() {
     const navigate = useNavigate();
+    // const { isInitialized, error, isLoggedIn, liff, userData } = useLiffContext();
 
     const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
     const [profile, setProfile] = useState<ProfileState | null>(null);
