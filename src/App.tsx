@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import Home from "../src/pages/Home";
 import Info from "../src/pages/Info";
-// import SettingMessage from "../src/pages/SettingMessage";
+import SettingMessage from "../src/pages/SettingMessage";
 
 import "./pages/all.scss";
 
@@ -13,7 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/info" element={<Info />} />
-        {/* <Route path="/setting-message" element={<SettingMessage />} /> */}
+        <Route path="/setting-message" element={<SettingMessage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
