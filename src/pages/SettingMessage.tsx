@@ -31,7 +31,7 @@ function SettingMessage() {
         }
         try {
             console.log(message, "預設訊息", apiUrl);
-            const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, message);
+            const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, JSON.stringify(message));
             console.log(response.data, "回傳資料");
         } catch (error) {
             console.error("前端錯誤", error);
