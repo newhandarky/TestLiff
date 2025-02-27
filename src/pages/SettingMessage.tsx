@@ -30,12 +30,20 @@ function SettingMessage() {
             messages: jsonData,
         }
         try {
-            const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, message, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'Authorization': `Bearer ${CHANNEL_ACCESS_TOKEN}`
-                }
-            });
+            const helloResponse = await axios.get(`${apiUrl}/hello`)
+                .then(response => {
+                    console.log('接收成功:', response);
+                })
+
+            console.log(helloResponse, "helloResponse");
+
+            const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, message);
+            // const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, message, {
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         // 'Authorization': `Bearer ${CHANNEL_ACCESS_TOKEN}`
+            //     }
+            // });
             // const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, JSON.stringify(message));
             console.log(response.data, "回傳資料");
         } catch (error) {
