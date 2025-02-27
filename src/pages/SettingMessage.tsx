@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlexMessage } from "../types/Message";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -8,16 +8,18 @@ const apiUrl = import.meta.env.VITE_API_URL;
 function SettingMessage() {
     const [jsonData, setJsonData] = useState<FlexMessage>();
     const { register, handleSubmit, formState: { errors } } = useForm<Inputs>();
-    const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
+    const onSubmit: SubmitHandler<Inputs> = data => console.log(data, "onSubmit");
 
-    // 靜態檔案不能透過import引入，所以使用fetch
-    fetch('/JSON/default-message.json')
-        .then(response => response.json())
-        .then(data => {
-            setJsonData(data);
-            console.log(data);
-        })
-        .catch(error => console.error('Error loading JSON:', error));
+    useEffect(() => {
+        // 靜態檔案不能透過import引入，所以使用fetch
+        fetch('/JSON/default-message.json')
+            .then(response => response.json())
+            .then(data => {
+                setJsonData(data);
+                console.log(data);
+            })
+            .catch(error => console.error('Error loading JSON:', error));
+    }, []);
 
     const sendDefaultMessage = async () => {
         try {
