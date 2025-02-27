@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import liff from "@line/liff";
 
-import Profile from '../types/Profile';
+import {Profile} from '../types/Profile';
 
 interface UseLiffResult {
     isInitialized: boolean;

@@ -1,27 +1,9 @@
-import React, { createContext, useContext, ReactNode, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import liff from "@line/liff";
-
-
-import Profile from '../types/Profile';
-
-interface LiffContextType {
-    isInitialized: boolean;
-    error: Error | null;
-    liff: typeof liff;
-    isLoggedIn: boolean;
-    userData: UserDataState;
-}
+import { UserDataState } from '../types/Profile';
+import { LiffContextType, LiffProviderProps } from '../types/LiffData';
 
 const LiffContext = createContext<LiffContextType | null>(null);
-
-interface LiffProviderProps {
-    children?: ReactNode;
-}
-
-interface UserDataState {
-    profile: Profile | null;
-}
-
 
 export const LiffProvider: React.FC<LiffProviderProps> = ({ children }) => {
     const [isInitialized, setIsInitialized] = useState(false);

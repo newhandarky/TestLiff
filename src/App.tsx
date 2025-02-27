@@ -1,9 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-// import { useEffect } from 'react';
-// import liff from '@line/liff';
-
-// import LIFFInspectorPlugin from '@line/liff-inspector';
-// import { LiffMockPlugin } from '@line/liff-mock';
 
 import Home from "../src/pages/Home";
 import Info from "../src/pages/Info";
