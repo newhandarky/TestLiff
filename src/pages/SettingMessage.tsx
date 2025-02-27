@@ -31,7 +31,14 @@ function SettingMessage() {
         }
         try {
             console.log(message, "預設訊息", apiUrl);
-            const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, JSON.stringify(message));
+            const helloResponse = await axios.get(`${apiUrl}/hello`)
+                .then(response => {
+                    console.log('接收成功:', response);
+                })
+            console.log("helloResponse", helloResponse);
+
+            const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, message);
+            // const response = await axios.post(`${apiUrl}/webhook/send-flex-message`, JSON.stringify(message));
             console.log(response.data, "回傳資料");
         } catch (error) {
             console.error("前端錯誤", error);
@@ -40,7 +47,7 @@ function SettingMessage() {
 
     return (
         <>
-            <button type="button" onClick={() => sendDefaultMessage()}>發送預設訊息</button>
+            <button className="btn btn-primary mb-3" type="button" onClick={() => sendDefaultMessage()}>發送預設訊息</button>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <input {...register("example", { required: true })} />
                 {errors.example && <span>This field is required</span>}
