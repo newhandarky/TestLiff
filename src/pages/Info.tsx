@@ -1,47 +1,34 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import liff from "@line/liff";
 
 import { useNavigate } from "react-router-dom";
-// import { useLiffContext } from '../utils/LiffProvider';
+import { useLiffContext } from '../utils/LiffProvider';
 
-import Profile from "../types/Profile";
-// import { FlexMessage } from "../types/Message";`
 import useToggleHandle from '../hooks/useToggleHandle';
 import QrCodeGenerator from './components/QrCodeGenerator';
 
-// import { sendMessage, tryGetMessage, getFollowers } from "../utils/lineMessaging"
-
-interface ProfileState {
-    profile: Profile;
-}
-
 function Info() {
     const navigate = useNavigate();
-    // const { isInitialized, error, isLoggedIn, liff, userData } = useLiffContext();
+    const { isInitialized, error, isLoggedIn, liff, userData } = useLiffContext();
 
     const [isOpen, handleModal] = useToggleHandle(false); // 初始狀態為關閉
-    const [profile, setProfile] = useState<ProfileState | null>(null);
     const [message, setMessage] = useState<string>('');
     const [followers, setFollowers] = useState<number>(0);
     const [scanResult, setScanResult] = useState<string>('');
-    const [userName, setUserName] = useState<string>('');
-    // const [isLiffReady, setIsLiffReady] = useState(false);
 
-    const liffId = import.meta.env.VITE_LIFF_APP_ID as string;
     const apiUrl = import.meta.env.VITE_API_URL as string;
 
     const sendMessage = async () => {
         try {
             // 檢查 profile 是否存在，確保 userId 可用
-            if (!profile?.profile?.userId) {
+            if (!userData?.profile?.userId) {
                 alert('找不到用戶 ID，無法發送訊息');
                 return;
             }
 
             // 發送 POST 請求到後端 /send-message 路徑
             const response = await axios.post(`${apiUrl}/webhook/send-message`, {
-                userId: profile.profile.userId, // 從 profile 中獲取 userId
+                userId: userData.profile.userId, // 從 profile 中獲取 userId
                 message: "您已成功登入" // 要發送的訊息內容
             }, {
                 headers: {
@@ -309,59 +296,22 @@ function Info() {
         navigate("/setting-message");
     };
 
+
     useEffect(() => {
-        const initializeLiff = async () => {
-            console.log(liff.isInClient() ? 'init前判斷 is in client' : 'init前判斷 not in client');
-            try {
-                // 初始化 LIFF
-                await liff.init({ liffId: liffId });
-                console.log("LIFF 初始化成功");
+        if (isInitialized) {
+            console.log("Info - 已初始化完畢");
+        } else {
+            console.log("Info - 尚未初始化", error);
+            return
+        }
 
-                // 等待 LIFF 準備完成
-                await liff.ready;
-                console.log("LIFF is ready");
-
-                // 確認是否在 LINE 客戶端內
-                if (!liff.isInClient()) {
-                    console.warn("不在 LINE 客戶端內");
-                } else {
-                    console.log("在 LINE 客戶端內");
-                }
-
-                // 確認登入狀態
-                if (!liff.isLoggedIn()) {
-                    console.log("尚未登入");
-                    liff.login();
-                    return; // 登入後會重新載入頁面，後續程式碼不需要執行
-                } else {
-                    console.log("已經登入");
-                }
-
-                // 獲取 LINE App 版本
-                const version = liff.getLineVersion();
-                console.log("LINE App Version:", version);
-
-                // 獲取用戶資料
-                const data = await liff.getProfile();
-                console.log(data.displayName, "用戶資訊");
-
-                // 設定用戶資料到狀態
-                setUserName(data.displayName);
-                setProfile({ profile: data });
-
-            } catch (error) {
-                console.error('Error initializing LIFF or fetching user profile:', error);
-            }
-        };
-
-        initializeLiff();
     }, []);
 
     return <>
         {console.log(message, "是否有訊息")}
         <div className='p-4 d-flex flex-column'>
             {
-                userName && <h2>{userName} 歡迎你回來</h2>
+                userData?.profile?.displayName && <h2>{userData?.profile?.displayName} 歡迎你回來</h2>
             }
             <button className='btn btn-primary mb-3' type="button" onClick={() => handleModal()
             }>顯示用戶訊息</button>
@@ -383,7 +333,7 @@ function Info() {
                     <p>Language: {liff.getLanguage()}</p>
                     <p>Version: {liff.getVersion()}</p>
                     <p>Is In Client: {liff.isInClient() ? 'Yes' : 'No'}</p>
-                    <p>Logged In: {liff.isLoggedIn() ? 'Yes' : 'No'}</p>
+                    <p>Logged In: {isLoggedIn ? 'Yes' : 'No'}</p>
                 </div>
             )}
 
