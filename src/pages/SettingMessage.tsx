@@ -27,7 +27,7 @@ function SettingMessage() {
             console.log(jsonData, "預設訊息");
             console.log(response.data);
         } catch (error) {
-            console.error(error);
+            console.error("前端錯誤", error);
         }
     };
 
