@@ -27,7 +27,7 @@ function SettingMessage() {
     const sendDefaultMessage = async () => {
         const message = {
             to: userData?.profile?.userId,
-            messages: [jsonData],
+            messages: jsonData,
         }
         try {
             console.log(message, "預設訊息", apiUrl);
